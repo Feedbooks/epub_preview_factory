@@ -5,3 +5,4 @@ gem 'nokogiri'
 gem "peregrin", :git => "git://github.com/banux/peregrin.git"
 gem "uuid"
 gem 'thor'
+gem 'workers'

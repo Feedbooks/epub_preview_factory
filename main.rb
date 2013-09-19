@@ -33,7 +33,7 @@ class App < Thor
       dir_source.each do |book|
         source_path = dir_source.path + '/' + book
         dest_path = (dir_dest.path + '/' + book).gsub(' ', '_')
-        next if File.directory?(book)
+        next if File.directory?(book) || File.extname(book) != '.epub'
         extract = Extractor.new(source_path, percent)
         extract.get_extract(dest_path)
         FileUtils.rm_rf(dest_path.gsub('.epub', ''))

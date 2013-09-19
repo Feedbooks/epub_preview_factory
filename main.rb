@@ -34,9 +34,14 @@ class App < Thor
         source_path = dir_source.path + '/' + book
         dest_path = (dir_dest.path + '/' + book).gsub(' ', '_')
         next if File.directory?(book) || File.extname(book) != '.epub'
-        extract = Extractor.new(source_path, percent)
-        extract.get_extract(dest_path)
-        FileUtils.rm_rf(dest_path.gsub('.epub', ''))
+        begin
+          extract = Extractor.new(source_path, percent)
+          extract.get_extract(dest_path)
+          FileUtils.rm_rf(dest_path.gsub('.epub', ''))
+        rescue
+          puts "failed to generate #{source_path}"
+          next
+        end
       end
     else
       extract = Extractor.new(options[:source], percent)

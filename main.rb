@@ -14,6 +14,7 @@ class App < Thor
    method_option :percent, :aliases => "-p", :desc => "change percent, default 5%"
    method_option :pool_size, :aliases => "-ps", :desc => "change pool size for directory mode, default 5"
    method_option :verbose, :aliases => "-v", :desc => "verbose mode"
+   method_option :max_word, :aliases => "-w", :desc => "calcul the size of the extract by word count instead of percent"
   def extract
     directory_mode = File.directory?(options[:source])
     percent = options[:percent].to_i
@@ -47,6 +48,9 @@ class App < Thor
           puts "trying generating #{dest_path}" if verbose
           begin
             extract = Extractor.new(source_path, percent)
+            if !options[:max_word].nil?
+              extract.set_max_word(options[:max_word].to_i)
+            end
             extract.get_extract(dest_path)
             FileUtils.rm_rf(dest_path.gsub('.epub', ''))
             puts "succefully generating #{dest_path}" if verbose
@@ -64,6 +68,9 @@ class App < Thor
       pool.join
     else
       extract = Extractor.new(options[:source], percent)
+      if !options[:max_word].nil?
+        extract.set_max_word(options[:max_word].to_i)
+      end
       if options[:identifier]
         extract.set_book_identifier(options[:identifier])
       end

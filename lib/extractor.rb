@@ -15,7 +15,9 @@ class Extractor
     @new_uuid = nil
 
     total = get_total_count
-    @limit = (total * @pourcent_extract / 100).round    
+    if @limit.nil?
+      @limit = (total * @pourcent_extract / 100).round
+    end
   end
 
   def get_total_count
@@ -28,17 +30,17 @@ class Extractor
     component_stats.each do |c|
       total += c[:count]
     end
-    #puts "TOTAL #{total}" 
+    #puts "TOTAL #{total}"
     return total
   end
 
   def count_text(content)
     doc = Nokogiri::HTML.parse(content)
     count_length = 0
-    doc.at_css('body').traverse do |t|        
+    doc.at_css('body').traverse do |t|
       unless t.text.nil?
         next if  SKIP_TAG.include?(t.name)
-        text = t.text.gsub("\r\n", "").gsub("\n", "").strip        
+        text = t.text.gsub("\r\n", "").gsub("\n", "").strip
         count_length += text.size
         end
       end
@@ -57,15 +59,15 @@ class Extractor
       if stop_component == true
         component_remove << c
         next
-      end      
+      end
 
       doc = Nokogiri::HTML.parse(c.contents)
       doc.at_css('body').traverse do |t|
-        unless SKIP_TAG.include?(t.name)        
-          unless t.text.nil?          
-            text = t.text.gsub("\r\n", "").gsub("\n", "").strip          
+        unless SKIP_TAG.include?(t.name)
+          unless t.text.nil?
+            text = t.text.gsub("\r\n", "").gsub("\n", "").strip
 
-            count_length += text.length          
+            count_length += text.length
             if count_length >= @limit && stop_component == false
               stop_component = true
               stop_node = t
@@ -81,7 +83,7 @@ class Extractor
     end
 
     @source_book.components.delete_if{|c| component_remove.include?(c)}
-    clean_chapters(component_remove)    
+    clean_chapters(component_remove)
 
     unless @final_para.nil?
       page = @source_book.components.last
@@ -97,7 +99,7 @@ class Extractor
 
 
     images_to_keep = []
-    @source_book.components.each do |c|    
+    @source_book.components.each do |c|
       doc = Nokogiri::HTML.parse(c.contents)
       images = doc.css("img")
       images.each do |img|
@@ -105,12 +107,12 @@ class Extractor
       end
     end
 
-    @source_book.resources.delete_if do |r|      
+    @source_book.resources.delete_if do |r|
       unless images_to_keep.include?(r.src.split("/").last)
         if r.media_type.match("image")
           true
         else
-          false          
+          false
         end
       else
         false
@@ -130,7 +132,7 @@ class Extractor
       else
         type_elem = @source_book.properties.select{|p| p.key == "bookid"}.first
         type_elem.value = @new_uuid
-      end      
+      end
     end
 
     if @source_book.property_for("source").nil?
@@ -138,8 +140,8 @@ class Extractor
     else
       type_elem = @source_book.properties.select{|p| p.key == "source"}.first
       type_elem.value = @source_book.property_for('identifier')
-    end    
-    
+    end
+
     # si epub3 on met a jour le <meta property="dcterms:modified">2011-01-01T12:00:00Z</meta>
 
     # @source_book.properties.each do |p|
@@ -162,6 +164,10 @@ class Extractor
     @new_uuid = identifier
   end
 
+  def set_max_word(limit)
+    @limit = limit
+  end
+
   def clean_chapters(component_remove, chapters = nil)
     last_chapter = @source_book.components.last
     if chapters.nil?
@@ -169,12 +175,12 @@ class Extractor
     else
       search_chaps = chapters
     end
-    search_chaps.map! do |c|      
+    search_chaps.map! do |c|
       if !c.children.empty?
         clean_chapters(component_remove, c.children)
       end
       if component_remove.map(&:src).include?(c.src.split('#').first)
-        c.src = last_chapter.src                
+        c.src = last_chapter.src
       end
       c
     end

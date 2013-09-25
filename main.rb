@@ -44,6 +44,7 @@ class App < Thor
           source_path = dir_source.path + '/' + book
           dest_path = (dir_dest.path + '/' + book).gsub(' ', '_')
           next if File.directory?(book) || File.extname(book) != '.epub'
+          puts "trying generating #{dest_path}" if verbose
           begin
             extract = Extractor.new(source_path, percent)
             extract.get_extract(dest_path)
@@ -55,6 +56,11 @@ class App < Thor
           end
         end
       end
+
+      pool.shutdown do
+        puts "Worker thread #{Thread.current.object_id} is shutting down." if verbose
+      end
+
       pool.join
     else
       extract = Extractor.new(options[:source], percent)

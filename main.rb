@@ -12,7 +12,7 @@ class App < Thor
    method_option :destination, :aliases => "-d", :desc => "destination file or directory ", :required => true
    method_option :identifier, :aliases => "-i", :desc => "force preview identifier"
    method_option :percent, :aliases => "-p", :desc => "change percent, default 5%"
-   method_option :pool_size, :aliases => "-s", :desc => "change pool size for directory mode, default 5"
+   method_option :pool_size, :aliases => "-w", :desc => "change pool size for directory mode, default 5"
    method_option :verbose, :aliases => "-v", :desc => "verbose mode"
    method_option :max_char, :aliases => "-c", :desc => "calcul the size of the extract by char count instead of percent"
    method_option :move_finish_files, :aliases => "-m", :desc => "move finished file to the following directory"

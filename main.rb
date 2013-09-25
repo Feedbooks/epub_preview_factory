@@ -12,9 +12,10 @@ class App < Thor
    method_option :destination, :aliases => "-d", :desc => "destination file or directory ", :required => true
    method_option :identifier, :aliases => "-i", :desc => "force preview identifier"
    method_option :percent, :aliases => "-p", :desc => "change percent, default 5%"
-   method_option :pool_size, :aliases => "-ps", :desc => "change pool size for directory mode, default 5"
+   method_option :pool_size, :aliases => "-s", :desc => "change pool size for directory mode, default 5"
    method_option :verbose, :aliases => "-v", :desc => "verbose mode"
-   method_option :max_word, :aliases => "-w", :desc => "calcul the size of the extract by word count instead of percent"
+   method_option :max_char, :aliases => "-c", :desc => "calcul the size of the extract by char count instead of percent"
+   method_option :move_finish_files, :aliases => "-m", :desc => "move finished file to the following directory"
   def extract
     directory_mode = File.directory?(options[:source])
     percent = options[:percent].to_i
@@ -40,6 +41,20 @@ class App < Thor
       end
       dir_source = Dir.new(options[:source])
 
+      if !options[:move_finish_files].nil?
+        if File.exists?(options[:move_finish_files])
+          if !File.directory?(options[:move_finish_files])
+            puts "the move directory is not a directory"
+            exit(1)
+          else
+            move_directory = Dir.new(options[:move_finish_files])
+          end
+        else
+          FileUtils.mkdir(options[:move_finish_files])
+          move_directory = Dir.new(options[:move_finish_files])
+        end
+      end
+
       dir_source.each do |book|
         pool.perform do
           source_path = dir_source.path + '/' + book
@@ -48,12 +63,15 @@ class App < Thor
           puts "trying generating #{dest_path}" if verbose
           begin
             extract = Extractor.new(source_path, percent)
-            if !options[:max_word].nil?
-              extract.set_max_word(options[:max_word].to_i)
+            if !options[:max_char].nil?
+              extract.set_max_word(options[:max_char].to_i)
             end
             extract.get_extract(dest_path)
             FileUtils.rm_rf(dest_path.gsub('.epub', ''))
             puts "succefully generating #{dest_path}" if verbose
+            unless move_directory.nil?
+              FileUtils.move(source_path, move_directory)
+            end
           rescue
             puts "failed to generate #{source_path}" if verbose
             next
@@ -69,7 +87,7 @@ class App < Thor
     else
       extract = Extractor.new(options[:source], percent)
       if !options[:max_word].nil?
-        extract.set_max_word(options[:max_word].to_i)
+        extract.set_max_word(options[:max_char].to_i)
       end
       if options[:identifier]
         extract.set_book_identifier(options[:identifier])

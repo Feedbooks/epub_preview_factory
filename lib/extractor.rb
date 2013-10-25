@@ -4,7 +4,7 @@ require 'peregrin'
 class Extractor
   attr_accessor :pourcent_extract
 
-  SKIP_TAG = ["strong", "span", "div", "p", "body", "b", "em", "i"]
+  SKIP_TAG = ["strong", "span", "body", "b", "em", "i"]
 
   def initialize(filepath, pourcent_extract = 5)
     @source_file = Peregrin::Epub.read(filepath)
@@ -265,8 +265,7 @@ class Extractor
 
   def clean_link(component_remove)
     @last_comp = @source_book.components.last if @last_comp.nil?
-    @last_chapter = find_chapter_from_components(@last_comp, @source_book.chapters)  if @last_chapter.nil?
-    last_para = @last_chapter.src.split('#').first + "#last_elem_preview"
+    last_para = @last_comp.src.split('#').first + "#last_elem_preview"
     @source_book.components.each do |c|
       doc = Nokogiri::HTML.parse(c.contents)
       doc.css('a').each do |link|

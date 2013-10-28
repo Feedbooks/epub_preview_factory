@@ -55,6 +55,14 @@ In single file mode (-s pointing to an EPUB), you just need to specify two optio
 
 In batch mode (-s pointing to a directory), you can specify the number of workers (default option is 5 workers) that you'd like to use to process books faster using the -w option.
 
+## Upcoming features
+
+* Detect FXL EPUB and use a page mode for them
+* Add specific support for navigation documents in EPUB 3
+* Detect cover pages, introduction, toc etc. and exclude them from count
+* Better support for relative URLs for links that are modified in HTML
+* Support for EPUB 3.0.1 collections and the preview role
+
 ## History
 
 * 0.1

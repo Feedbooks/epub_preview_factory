@@ -243,7 +243,7 @@ class Extractor
       end
 
       if change_chapter == true
-        c.src = @last_chapter.src.split('#').first + "#last_elem_preview"
+        c.src = @last_comp.src.split('#').first + "#last_elem_preview"
       end
       if @last_pos.nil? && change_chapter == true
         @last_pos = @current_pos

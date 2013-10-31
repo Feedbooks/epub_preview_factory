@@ -117,6 +117,10 @@ class Extractor
       images.each do |img|
         images_to_keep << img.attr("src").split("/").last
       end
+      images = doc.css("image")
+      images.each do |img|
+        images_to_keep << img.attr("xlink:href").split("/").last
+      end
     end
 
     @source_book.resources.delete_if do |r|

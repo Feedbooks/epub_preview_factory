@@ -1,11 +1,11 @@
 GIT
-  remote: git://github.com/maximplourde/peregrin.git
-  revision: a23ea05a213470d66b48ba394576761aaadd154b
+  remote: git://github.com/demarque/peregrin.git
+  revision: 6cfc53ca21798604c20f544c09a8e1859473d6ef
   specs:
     peregrin (1.2.3)
       mime-types
       nokogiri
-      zipruby
+      rubyzip
 
 GEM
   remote: http://rubygems.org/
@@ -16,12 +16,12 @@ GEM
     mini_portile (0.5.2)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
+    rubyzip (1.1.0)
     systemu (2.5.2)
     thor (0.18.1)
     uuid (2.3.7)
       macaddr (~> 1.0)
     workers (0.2.2)
-    zipruby (0.3.6)
 
 PLATFORMS
   ruby

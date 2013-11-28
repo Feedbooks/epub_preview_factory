@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{EPUB Preview Factory}
   s.description = %q{A gem that generates EPUB previews from full publications.}
 
-  s.add_dependency "zipruby"#, "~> 1.5.0"
+  s.add_dependency "rubyzip"
   s.add_dependency "nokogiri"#, "0.9.1"
   s.add_dependency "mime-types"#, "0.9.2"
   s.add_dependency "uuid"#, "1.8.0"

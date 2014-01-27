@@ -225,13 +225,15 @@ class Extractor
     @last_comp = @source_book.components.last if @last_comp.nil?
     @last_chapter = find_chapter_from_components(@last_comp, @source_book.chapters) if @last_chapter.nil?
     @current_pos = 1 if @current_pos.nil?
+    @chapters ||= {}
+
     if chapters.nil?
       search_chaps = @source_book.chapters
     else
       search_chaps = chapters
     end
-    search_chaps.map! do |c|
 
+    search_chaps.map! do |c|
       change_chapter = false
       if component_remove.map(&:src).include?(c.src.split('#').first)
         change_chapter = true
@@ -249,15 +251,14 @@ class Extractor
       if change_chapter == true
         c.src = @last_comp.src.split('#').first + "#last_elem_preview"
       end
-      if @last_pos.nil? && change_chapter == true
-        @last_pos = @current_pos
-      end
-      if change_chapter == true
-        c.position = @last_pos
+
+      if @chapters[c.src]
+        c.position = @chapters[c.src]
       else
         c.position = @current_pos
+        @chapters[c.src] = c.position
+        @current_pos += 1
       end
-      @current_pos += 1
 
       if !c.children.empty?
         clean_chapters(component_remove, c.children)
@@ -302,5 +303,4 @@ class Extractor
     end
     return false
   end
-
 end

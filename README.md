@@ -71,3 +71,5 @@ In batch mode (-s pointing to a directory), you can specify the number of worker
   - Use metadata recommendations from the AHL spec (different identifier, link back to original identifier with dc:source, dc:type set to preview)
   - Updates the container, OPF and NCX to only include the content documents that we need
   - Detect images used in content files of the preview and remove other images
+=======
+epub_preview_factory

@@ -1,6 +1,7 @@
 GIT
   remote: git://github.com/Feedbooks/peregrin.git
   revision: 96bcc81fc2008dea2e5cc97206760dc5213e078c
+  branch: master
   specs:
     peregrin (1.2.3)
       mime-types
@@ -12,7 +13,7 @@ GEM
   specs:
     macaddr (1.6.1)
       systemu (~> 2.5.0)
-    mime-types (2.1)
+    mime-types (2.6.1)
     mini_portile (0.5.2)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
@@ -32,3 +33,6 @@ DEPENDENCIES
   thor
   uuid
   workers
+
+BUNDLED WITH
+   1.10.5

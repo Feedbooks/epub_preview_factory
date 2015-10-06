@@ -214,11 +214,7 @@ class Extractor
 
   def component_have_id?(component, id)
     doc = Nokogiri::HTML.parse(component.contents)
-    find_id = doc.at_css("##{id}")
-    if !find_id.nil?
-      return true
-    end
-    return false
+    !!doc.at_xpath("//*[@id='#{id}']")
   end
 
   def find_chapter_from_components(component, chapters)
